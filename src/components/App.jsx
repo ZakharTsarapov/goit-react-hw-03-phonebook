@@ -5,13 +5,25 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import initialContacts from './data/contacts.json';
 import { ContactsList } from './ContactsList/ContactsList';
 import Filter from './Filter/Filter';
-import css from './App.module.css'
+import css from './App.module.css';
 
 export class App extends Component {
   state = {
     contacts: initialContacts,
     filter: '',
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    this.setState({ contacts: parsedContacts });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   deleteContacts = contactId => {
     this.setState(prevState => ({
